@@ -1,213 +1,157 @@
+// FeatureCard.jsx
 import React from 'react';
-import { FaChevronLeft, FaPhone, FaEnvelope, FaBuilding, FaQuestionCircle, FaBug, FaCommentAlt } from 'react-icons/fa';
-import FeatureCard from './FeatureCard'; 
 
-// Customer Support Details
-const supportData = {
-    phone: "2400032512",
-    company: "KLUNIVERSITY",
-    email: "2400032512@kluniversity.in"
-};
-
-// CRITICAL: supportOptions will now call navigation functions passed as props
-const CustomerSupportPage = ({ onGoBack, onNavigateToTicket, onNavigateToBug, onNavigateToChat }) => {
-    
-    const supportOptions = [
-        { 
-            title: "Submit a Ticket", 
-            description: "For non-urgent issues, submit a detailed support request.", 
-            icon: <FaQuestionCircle />, 
-            iconColor: '#FFD700', // Gold
-            action: onNavigateToTicket // Uses navigation prop
-        },
-        { 
-            title: "Report a Bug", 
-            description: "Found an error or technical glitch? Let us know here.", 
-            icon: <FaBug />, 
-            iconColor: '#FF4500', // Orange-Red
-            action: onNavigateToBug // Uses navigation prop
-        },
-        { 
-            title: "Live Chat (Premium)", 
-            description: "Connect instantly with a support agent for fast resolution.", 
-            icon: <FaCommentAlt />, 
-            iconColor: '#00BFFF', // Bright Blue
-            action: onNavigateToChat // Uses navigation prop
-        },
-    ];
-
-    return (
-        <div className="support-container">
-            <header className="support-header">
-                <button onClick={onGoBack} className="back-button">
-                    <FaChevronLeft /> Back to Roles
-                </button>
-                <h1>Customer Support Center</h1>
-            </header>
-
-            <main className="support-main-content">
-                {/* Contact Information Section */}
-                <h2>Direct Contact</h2>
-                <div className="contact-details-grid">
-                    <div className="contact-card">
-                        <FaPhone className="contact-icon phone-icon" />
-                        <h3>Phone Support</h3>
-                        <p>Call us for immediate assistance during business hours.</p>
-                        <a href={`tel:${supportData.phone}`}>{supportData.phone}</a>
-                    </div>
-                    
-                    <div className="contact-card">
-                        <FaEnvelope className="contact-icon email-icon" />
-                        <h3>Email Support</h3>
-                        <p>We aim to respond to all emails within 24 hours.</p>
-                        <a href={`mailto:${supportData.email}`}>{supportData.email}</a>
-                    </div>
-                    
-                    <div className="contact-card">
-                        <FaBuilding className="contact-icon company-icon" />
-                        <h3>Provided By</h3>
-                        <p>All support services are handled directly by:</p>
-                        <span>{supportData.company}</span>
-                    </div>
-                </div>
-                
-                {/* Common Actions Section (Using FeatureCard for consistency) */}
-                <h2>Common Support Actions</h2>
-                <div className="features-grid">
-                    {supportOptions.map((item, index) => (
-                        <FeatureCard
-                            key={index}
-                            title={item.title}
-                            description={item.description}
-                            icon={item.icon}
-                            iconColor={item.iconColor}
-                            onClick={item.action} // Calls the navigation prop directly
-                        />
-                    ))}
-                </div>
-
-            </main>
-
-            <style jsx>{`
-                .support-container {
-                    min-height: 100vh;
-                    background: radial-gradient(circle at center, #1b2631 0%, #0d1217 100%); 
-                    color: white;
-                    font-family: system-ui, sans-serif;
-                    padding: 40px;
-                    box-sizing: border-box;
-                }
-                .support-header {
-                    padding: 0 0 40px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    position: relative;
-                }
-                .back-button {
-                    position: absolute;
-                    left: 0; 
-                    top: 0;
-                    background: none;
-                    border: none;
-                    color: #55aaff;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    cursor: pointer;
-                    font-size: 1rem;
-                    padding: 10px 15px;
-                    border-radius: 8px;
-                }
-                .support-header h1 {
-                    font-size: 2.8rem;
-                    color: #AAAAAA; 
-                    text-align: center;
-                    margin-top: 20px;
-                    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-                }
-
-                .support-main-content {
-                    max-width: 1000px;
-                    margin: 0 auto;
-                    padding: 20px;
-                }
-                
-                /* Sub Headers */
-                .support-main-content h2 {
-                    font-size: 2rem;
-                    color: white;
-                    margin-top: 40px;
-                    margin-bottom: 25px;
-                    text-align: left;
-                    padding-bottom: 5px;
-                    border-bottom: 2px solid #55aaff;
-                }
-
-                /* --- Contact Grid --- */
-                .contact-details-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                    gap: 30px;
-                }
-                .contact-card {
-                    background-color: #2c3440;
-                    padding: 25px;
-                    border-radius: 16px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-                    border-left: 5px solid #AAAAAA; 
-                }
-                .contact-card h3 {
-                    font-size: 1.5rem;
-                    color: white;
-                    margin-bottom: 10px;
-                }
-                .contact-card p {
-                    color: #b0c4de;
-                    margin-bottom: 15px;
-                }
-                .contact-card a, .contact-card span {
-                    font-weight: 600;
-                    color: #00BFFF; 
-                    text-decoration: none;
-                    font-size: 1.1rem;
-                }
-                .contact-card a:hover {
-                    text-decoration: underline;
-                }
-                .contact-icon {
-                    font-size: 2rem;
-                    margin-bottom: 15px;
-                }
-                .phone-icon { color: #3CB371; }
-                .email-icon { color: #FFD700; }
-                .company-icon { color: #FF69B4; }
-
-                /* --- Feature Card Grid --- */
-                .features-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                    gap: 30px;
-                    margin-bottom: 50px;
-                }
-
-                /* Mobile Adjustments */
-                @media (max-width: 768px) {
-                    .support-container {
-                        padding: 15px;
-                    }
-                    .support-header h1 {
-                        font-size: 2rem;
-                    }
-                    .contact-details-grid {
-                        grid-template-columns: 1fr;
-                        gap: 20px;
-                    }
-                }
-            `}</style>
+const FeatureCard = ({ title, description, icon, iconColor = '#00BFFF', onClick }) => {
+  return (
+    <button
+      className="feature-card"
+      onClick={onClick}
+      type="button"
+      aria-label={title}
+    >
+      <div className="feature-inner">
+        <div className="feature-icon-wrap" style={{ '--icon-color': iconColor }}>
+          <div className="feature-icon-bg" aria-hidden="true" />
+          <div className="feature-icon">{icon}</div>
         </div>
-    );
+
+        <div className="feature-content">
+          <h3 className="feature-title">{title}</h3>
+          <p className="feature-desc">{description}</p>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .feature-card {
+          display: block;
+          width: 100%;
+          text-align: left;
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+          border-radius: 14px;
+          padding: 26px 22px;
+          border: 1px solid rgba(255,255,255,0.04);
+          box-shadow: 0 18px 40px rgba(3,10,18,0.6);
+          cursor: pointer;
+          transition: transform 260ms cubic-bezier(.2,.9,.25,1), box-shadow 260ms, border-color 260ms;
+          transform-style: preserve-3d;
+          overflow: hidden;
+        }
+
+        .feature-card:focus {
+          outline: none;
+          box-shadow: 0 20px 46px rgba(0,140,255,0.12);
+          border-color: rgba(0,191,255,0.22);
+        }
+
+        .feature-inner {
+          display: flex;
+          gap: 18px;
+          align-items: center;
+        }
+
+        .feature-icon-wrap {
+          position: relative;
+          width: 78px;
+          height: 78px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 12px;
+          transform: translateZ(0);
+        }
+
+        /* soft rim gradient that uses the provided icon color */
+        .feature-icon-bg {
+          position: absolute;
+          inset: -6px;
+          border-radius: 14px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+          pointer-events: none;
+          filter: blur(8px);
+          z-index: 0;
+        }
+
+        .feature-icon {
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 56px;
+          height: 56px;
+          border-radius: 10px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+          border: 3px solid rgba(0,0,0,0.6);
+          box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+          color: var(--icon-color);
+          font-size: 1.6rem;
+          transition: transform 260ms, box-shadow 260ms, filter 260ms;
+        }
+
+        .feature-title {
+          margin: 0 0 8px 0;
+          font-size: 1.28rem;
+          font-weight: 800;
+          color: #f7fcff;
+          letter-spacing: -0.2px;
+        }
+
+        .feature-desc {
+          margin: 0;
+          color: #aebbca;
+          line-height: 1.45;
+          font-size: 0.95rem;
+        }
+
+        /* hover & focus tilt / lift */
+        .feature-card:hover {
+          transform: translateY(-12px) rotateX(2deg) rotateY(-1.2deg) scale(1.01);
+          box-shadow: 0 36px 78px rgba(0,120,220,0.10);
+          border-color: rgba(0,191,255,0.14);
+          z-index: 4;
+        }
+        .feature-card:active {
+          transform: translateY(-4px) scale(0.997);
+        }
+
+        /* icon micro-interaction */
+        .feature-card:hover .feature-icon {
+          transform: translateY(-4px) scale(1.03);
+          box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+          filter: drop-shadow(0 6px 18px rgba(0,140,255,0.06));
+        }
+
+        /* subtle bottom rim */
+        .feature-card::after {
+          content: "";
+          position: absolute;
+          inset: auto 16px 14px 16px;
+          height: 6px;
+          border-radius: 6px;
+          background: linear-gradient(90deg, rgba(0,191,255,0.06), rgba(139,195,74,0.04));
+          pointer-events: none;
+          opacity: 0.85;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+          .feature-inner { gap: 12px; }
+          .feature-icon-wrap { width: 64px; height: 64px; }
+          .feature-icon { width: 52px; height: 52px; font-size: 1.35rem; border-radius: 10px; }
+          .feature-title { font-size: 1.12rem; }
+          .feature-desc { font-size: 0.92rem; }
+        }
+
+        /* reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+          .feature-card, .feature-card:hover, .feature-card:active {
+            transform: none !important;
+            transition: none !important;
+          }
+        }
+      `}</style>
+    </button>
+  );
 };
 
-export default CustomerSupportPage;
+export default FeatureCard;

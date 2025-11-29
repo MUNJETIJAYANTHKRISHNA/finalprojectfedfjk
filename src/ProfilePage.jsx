@@ -1,214 +1,337 @@
 import React from 'react';
-import { FaChevronLeft, FaPencilAlt, FaLock, FaCreditCard, FaCalendarCheck } from 'react-icons/fa';
-import FeatureCard from './FeatureCard'; 
+import { FaChevronLeft, FaPencilAlt, FaLock, FaCreditCard, FaCalendarCheck, FaSignOutAlt, FaCalendarAlt } from 'react-icons/fa';
+import FeatureCard from './FeatureCard';
 
-// Data structure mimicking the screenshot
+// Data structure (unchanged)
 const userData = {
-    name: "Jayanth Krishnam",
-    email: "jayanthkrishnam@gmail.com",
-    location: "Bengaluru, Karnataka",
-    memberSince: "October 2023",
-    profilePic: "/path/to/profile-pic.jpg" // Placeholder
+  name: "Jayanth Krishnam",
+  email: "jayanthkrishnam@gmail.com",
+  location: "Bengaluru, Karnataka",
+  memberSince: "October 2023",
+  profilePic: "profile-pic.jpg" // put under public/images/profile-pic.jpg (or leave to fallback)
 };
 
-// Card data - Adding the new 'Your Bookings' card
+// Profile options (unchanged data shape)
 const profileOptions = [
-    { 
-        title: "Edit Personal Info", 
-        description: "Update contact details, bio, and profile picture.", 
-        icon: <FaPencilAlt />, 
-        iconColor: '#00BFFF', // Blue
-        actionType: 'edit-profile'
-    },
-    { 
-        title: "Security Settings", 
-        description: "Change password and set up two factor authentication.", 
-        icon: <FaLock />, 
-        iconColor: '#FF69B4', // Pink
-        actionType: 'security-settings'
-    },
-    { 
-        title: "Billing & Payments", 
-        description: "Manage payment methods and view billing history.", 
-        icon: <FaCreditCard />, 
-        iconColor: '#3CB371', // Green
-        actionType: 'billing-payments'
-    },
-    { 
-        title: "Your Bookings", 
-        description: "View, modify, or cancel your scheduled appointments.", 
-        icon: <FaCalendarCheck />, 
-        iconColor: '#FFD700', // Gold/Yellow
-        actionType: 'bookings'
-    }
+  {
+    title: "Edit Personal Info",
+    description: "Update contact details, bio, and profile picture.",
+    icon: <FaPencilAlt />,
+    iconColor: '#00BFFF',
+    actionType: 'edit-profile'
+  },
+  {
+    title: "Security Settings",
+    description: "Change password and set up two factor authentication.",
+    icon: <FaLock />,
+    iconColor: '#FF69B4',
+    actionType: 'security-settings'
+  },
+  {
+    title: "Billing & Payments",
+    description: "Manage payment methods and view billing history.",
+    icon: <FaCreditCard />,
+    iconColor: '#3CB371',
+    actionType: 'billing-payments'
+  },
+  {
+    title: "Your Bookings",
+    description: "View, modify, or cancel your scheduled appointments.",
+    icon: <FaCalendarCheck />,
+    iconColor: '#FFD700',
+    actionType: 'bookings'
+  }
 ];
 
-// CRITICAL: Accept all navigation props
-const ProfilePage = ({ onGoBack, onNavigateToBookings, onNavigateToEditProfile, onNavigateToSecurity, onNavigateToBilling }) => {
+const ProfilePage = ({ onGoBack, onNavigateToBookings, onNavigateToEditProfile, onNavigateToSecurity, onNavigateToBilling, onLogout }) => {
 
-    const handleCardClick = (actionType) => {
-        if (actionType === 'edit-profile') {
-            onNavigateToEditProfile(); 
-        } else if (actionType === 'security-settings') {
-            onNavigateToSecurity();
-        } else if (actionType === 'billing-payments') {
-             onNavigateToBilling();
-        } else if (actionType === 'bookings') {
-             onNavigateToBookings(); 
-        } else {
-            console.log(`Action: ${actionType}`);
+  // Simulated quick stats (you can wire these to real data)
+  const quickStats = {
+    totalBookings: 12,
+    upcomingBooking: '2025-12-05 10:30 AM'
+  };
+
+  const handleCardClick = (actionType) => {
+    if (actionType === 'edit-profile') onNavigateToEditProfile && onNavigateToEditProfile();
+    else if (actionType === 'security-settings') onNavigateToSecurity && onNavigateToSecurity();
+    else if (actionType === 'billing-payments') onNavigateToBilling && onNavigateToBilling();
+    else if (actionType === 'bookings') onNavigateToBookings && onNavigateToBookings();
+    else console.log('Action:', actionType);
+  };
+
+  // avatar handling: public/images/<profilePic>
+  const avatarSrc = `/images/${userData.profilePic}`;
+
+  return (
+    <div className="profile-container">
+      {/* animated background blobs */}
+      <div className="bg-blobs" aria-hidden="true" />
+
+      <header className="profile-header">
+        <button className="back-button" onClick={onGoBack}><FaChevronLeft /> Back to Roles</button>
+        <h1>User Profile</h1>
+        <p className="subtitle">Manage your account, bookings and settings.</p>
+      </header>
+
+      <main className="profile-main-content">
+        {/* User Info Card */}
+        <section className="user-info-wrap">
+          <div className="user-info-card" role="region" aria-label="User information">
+            <div className="avatar-area">
+              <div className="avatar-skeleton" />
+              <img
+                src={avatarSrc}
+                alt={userData.name}
+                className="profile-pic"
+                loading="lazy"
+                onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement.classList.add('no-img'); }}
+              />
+              {/* initials fallback */}
+              <div className="avatar-initials" aria-hidden="true">
+                {userData.name.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase()}
+              </div>
+              <span className="status-badge" title="Verified">Verified</span>
+            </div>
+
+            <div className="user-details">
+              <div className="user-top">
+                <h2 className="user-name">{userData.name}</h2>
+                <div className="action-buttons">
+                  <button className="btn btn-outline" onClick={() => onNavigateToEditProfile && onNavigateToEditProfile()} aria-label="Edit profile">
+                    <FaPencilAlt /> Edit
+                  </button>
+                  <button className="btn btn-ghost" onClick={() => onLogout && onLogout()} aria-label="Logout">
+                    <FaSignOutAlt /> Log out
+                  </button>
+                </div>
+              </div>
+
+              <p className="user-email">{userData.email}</p>
+              <p className="user-location">{userData.location}</p>
+              <p className="member-since">Member since: <strong>{userData.memberSince}</strong></p>
+
+              {/* Quick stats row */}
+              <div className="quick-stats">
+                <div className="stat">
+                  <div className="stat-icon"><FaCalendarAlt /></div>
+                  <div>
+                    <div className="stat-value">{quickStats.totalBookings}</div>
+                    <div className="stat-label">Total bookings</div>
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-icon"><FaCalendarCheck /></div>
+                  <div>
+                    <div className="stat-value upcoming">{quickStats.upcomingBooking}</div>
+                    <div className="stat-label">Upcoming</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Feature Cards Grid */}
+        <section className="profile-features-grid">
+          {profileOptions.map((item, idx) => (
+            <FeatureCard
+              key={idx}
+              title={item.title}
+              description={item.description}
+              icon={item.icon}
+              iconColor={item.iconColor}
+              onClick={() => handleCardClick(item.actionType)}
+            />
+          ))}
+        </section>
+      </main>
+
+      {/* Styles */}
+      <style jsx>{`
+        .profile-container {
+          min-height: 100vh;
+          position: relative;
+          overflow: hidden;
+          background: linear-gradient(180deg,#050712 0%, #07121a 40%, #05070a 100%);
+          color: #eaf6ff;
+          font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+          padding: 36px 20px 80px;
         }
-    };
 
-    return (
-        <div className="profile-container">
-            <header className="profile-header">
-                <button onClick={onGoBack} className="back-button">
-                    <FaChevronLeft /> Back to Roles
-                </button>
-                <h1>User Profile</h1>
-            </header>
+        .bg-blobs {
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          pointer-events: none;
+        }
+        .bg-blobs::before, .bg-blobs::after {
+          content: "";
+          position: absolute;
+          border-radius: 999px;
+          filter: blur(80px);
+          mix-blend-mode: screen;
+          opacity: 0.9;
+        }
+        .bg-blobs::before {
+          width: 560px; height:560px; left: -12%; top: -8%;
+          background: radial-gradient(circle at 30% 30%, rgba(0,191,255,0.22), rgba(0,191,255,0.06), transparent 65%);
+          animation: floatA 22s ease-in-out infinite;
+        }
+        .bg-blobs::after {
+          width: 620px; height:620px; right: -18%; bottom: -12%;
+          background: radial-gradient(circle at 70% 40%, rgba(255,193,7,0.20), rgba(255,193,7,0.05), transparent 65%);
+          animation: floatB 26s ease-in-out infinite;
+        }
+        @keyframes floatA { 0%{transform:translate(0,0)}50%{transform:translate(30px,-18px)}100%{transform:translate(0,0)} }
+        @keyframes floatB { 0%{transform:translate(0,0)}50%{transform:translate(-28px,26px)}100%{transform:translate(0,0)} }
 
-            <main className="profile-main-content">
-                {/* User Info Card (Matching Screenshot) */}
-                <div className="user-info-card">
-                    <img src={userData.profilePic} alt="Profile" className="profile-pic-placeholder"/>
-                    <div className="user-details">
-                        <h2>{userData.name}</h2>
-                        <p className="user-email">{userData.email}</p>
-                        <p className="user-location">{userData.location}</p>
-                        <p className="member-since">Member since: {userData.memberSince}</p>
-                    </div>
-                </div>
+        .profile-header {
+          position: relative;
+          z-index: 2;
+          text-align: center;
+          margin-bottom: 18px;
+        }
+        .back-button {
+          position: absolute;
+          left: 0;
+          top: 0;
+          background: rgba(255,255,255,0.02);
+          border: 1px solid rgba(255,255,255,0.04);
+          color: #7fd4ff;
+          padding: 8px 12px;
+          border-radius: 999px;
+          display:inline-flex;
+          gap:8px;
+          align-items:center;
+          font-weight:600;
+          cursor:pointer;
+          box-shadow: 0 8px 22px rgba(0,0,0,0.6);
+        }
+        .profile-header h1 {
+          font-size: 2.4rem;
+          margin: 8px 0 6px;
+          color: #ffd766;
+          font-weight:800;
+          letter-spacing:-0.6px;
+          text-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .subtitle { color:#9fb9c9; margin:0; }
 
-                {/* Feature Cards Grid */}
-                <div className="profile-features-grid">
-                    {profileOptions.map((item, index) => (
-                        <FeatureCard
-                            key={index}
-                            title={item.title}
-                            description={item.description}
-                            icon={item.icon}
-                            iconColor={item.iconColor}
-                            onClick={() => handleCardClick(item.actionType)}
-                        />
-                    ))}
-                </div>
+        .profile-main-content {
+          position: relative;
+          z-index: 2;
+          max-width: 1100px;
+          margin: 0 auto;
+        }
 
-            </main>
+        /* USER INFO CARD (glass + avatar) */
+        .user-info-wrap { margin: 8px 0 28px; display:flex; justify-content:center; }
+        .user-info-card {
+          width: 100%;
+          max-width: 920px;
+          display:flex;
+          gap: 22px;
+          align-items: flex-start;
+          background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
+          border-radius: 16px;
+          padding: 20px;
+          border: 1px solid rgba(255,255,255,0.04);
+          box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+          transform-style: preserve-3d;
+          transition: transform 260ms cubic-bezier(.2,.9,.25,1), box-shadow 260ms;
+        }
+        .user-info-card:hover { transform: translateY(-8px); box-shadow: 0 36px 80px rgba(0,140,255,0.06); }
 
-            <style jsx>{`
-                .profile-container {
-                    min-height: 100vh;
-                    background: radial-gradient(circle at center, #1b2631 0%, #0d1217 100%); 
-                    color: white;
-                    font-family: system-ui, sans-serif;
-                    padding: 40px;
-                    box-sizing: border-box;
-                }
-                .profile-header {
-                    padding: 0 0 40px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    position: relative;
-                }
-                .back-button {
-                    position: absolute;
-                    left: 0; 
-                    top: 0;
-                    background: none;
-                    border: none;
-                    color: #55aaff;
-                    font-weight: 600;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    cursor: pointer;
-                    font-size: 1rem;
-                    padding: 10px 15px;
-                    border-radius: 8px;
-                }
-                .profile-header h1 {
-                    font-size: 2.8rem;
-                    color: #FFD700; 
-                    text-align: center;
-                    margin-top: 20px;
-                    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-                }
+        .avatar-area {
+          position: relative;
+          width: 96px;
+          height: 96px;
+          flex-shrink: 0;
+        }
+        .avatar-skeleton {
+          position:absolute; inset:0; border-radius: 14px;
+          background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
+          animation: shimmer 1.2s linear infinite;
+          z-index: 1;
+        }
+        @keyframes shimmer { to { transform: translateX(80%); } }
 
-                .profile-main-content {
-                    max-width: 1000px;
-                    margin: 0 auto;
-                    padding: 20px 0;
-                }
+        .profile-pic {
+          width: 96px; height: 96px; border-radius: 14px; object-fit: cover;
+          border: 3px solid rgba(6,10,14,0.9);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+          position: relative; z-index: 3;
+        }
+        .user-info-card.no-img .avatar-skeleton { opacity: 0; visibility: hidden; }
 
-                /* User Info Card (Matching Screenshot) */
-                .user-info-card {
-                    background-color: #2c3440; 
-                    padding: 30px;
-                    border-radius: 16px;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-                    display: flex;
-                    align-items: center;
-                    max-width: 600px;
-                    margin: 0 auto 50px;
-                }
-                .profile-pic-placeholder {
-                    width: 70px;
-                    height: 70px;
-                    border-radius: 50%;
-                    margin-right: 20px;
-                    background-color: #55aaff; 
-                    border: 3px solid white;
-                    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.52 19c.64-1.9 2.05-3.64 4.12-4.12 2.1-.5 4.3.0 5.8 1.5.3.3.6.5 1 .7 1.2.6 2.5.9 3.8.9V21H2v-2h3.52zM12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>');
-                    background-size: cover;
-                    background-position: center;
-                }
-                .user-details h2 {
-                    font-size: 1.8rem;
-                    margin-top: 0;
-                    color: #FFD700; 
-                }
-                .user-details p {
-                    font-size: 0.95rem;
-                    color: #b0c4de;
-                    margin: 2px 0;
-                }
-                .user-email {
-                    color: #AAAAAA;
-                }
+        .avatar-initials {
+          position: absolute;
+          inset: 0;
+          display:flex; align-items:center; justify-content:center;
+          z-index: 2;
+          font-weight:800;
+          color: #031a22;
+          background: linear-gradient(180deg,#9fe9ff,#00bfff);
+          border-radius:14px;
+          border: 3px solid rgba(6,10,14,0.9);
+          font-size: 1.25rem;
+        }
 
-                /* Feature Card Grid */
-                .profile-features-grid {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-                    gap: 30px;
-                    justify-content: center;
-                    max-width: 900px;
-                    margin: 0 auto;
-                }
+        .status-badge {
+          position: absolute;
+          right: -6px;
+          bottom: -6px;
+          background: linear-gradient(180deg,#ffd54f,#ffb347);
+          color: #081018;
+          padding: 6px 8px;
+          border-radius: 12px;
+          font-weight:700;
+          font-size: 0.75rem;
+          z-index: 6;
+          border: 2px solid rgba(2,6,10,0.9);
+        }
 
-                /* Mobile Adjustments */
-                @media (max-width: 768px) {
-                    .profile-container {
-                        padding: 15px;
-                    }
-                    .user-info-card {
-                        flex-direction: column;
-                        text-align: center;
-                    }
-                    .profile-pic-placeholder {
-                        margin: 0 0 15px 0;
-                    }
-                    .profile-features-grid {
-                        grid-template-columns: 1fr;
-                        gap: 20px;
-                    }
-                }
-            `}</style>
-        </div>
-    );
+        .user-details { flex: 1; min-width: 0; }
+        .user-top { display:flex; justify-content: space-between; align-items:center; gap: 12px; }
+        .user-name { margin: 0; font-size: 1.25rem; font-weight: 900; color: #f7fbff; }
+        .action-buttons { display:flex; gap:10px; align-items:center; }
+        .btn { display:inline-flex; gap:8px; align-items:center; border-radius:10px; padding:8px 12px; font-weight:700; cursor:pointer; border: none; }
+        .btn-outline { background: rgba(255,255,255,0.03); color: #bfefff; border: 1px solid rgba(255,255,255,0.04); }
+        .btn-ghost { background: transparent; color: #9fd7ff; border: 1px solid rgba(255,255,255,0.02); }
+
+        .user-email, .user-location, .member-since { margin:6px 0; color:#9fb9c9; font-size:0.95rem; }
+
+        /* quick stats */
+        .quick-stats { display:flex; gap:18px; margin-top:14px; flex-wrap:wrap; }
+        .stat { display:flex; gap:12px; align-items:center; background: rgba(255,255,255,0.01); padding:10px 14px; border-radius:10px; border: 1px solid rgba(255,255,255,0.02); min-width: 170px; }
+        .stat-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.02); border-radius:8px; color:#9fe6ff; font-size:18px; }
+        .stat-value { font-weight:800; color:#e9fbff; }
+        .stat-label { color:#a8bac6; font-size:0.85rem; }
+
+        .stat .upcoming { font-size:0.95rem; }
+
+        /* Features grid uses FeatureCard (already styled). minor spacing: */
+        .profile-features-grid { margin-top:24px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+
+        /* responsive */
+        @media (max-width: 920px) {
+          .user-info-card { flex-direction: row; padding: 16px; }
+          .profile-pic, .avatar-initials, .avatar-skeleton { width: 80px; height: 80px; border-radius: 12px; }
+        }
+        @media (max-width: 680px) {
+          .user-info-card { flex-direction: column; align-items: center; text-align:center; gap:12px; padding: 16px; }
+          .user-top { flex-direction: column; align-items:center; gap:8px; }
+          .action-buttons { justify-content: center; }
+          .profile-features-grid { grid-template-columns: 1fr; }
+        }
+
+        /* accessibility: reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+          .bg-blobs::before, .bg-blobs::after, .user-info-card, .contact-card-inner, .pro-card { animation: none !important; transition: none !important; transform: none !important; }
+        }
+      `}</style>
+    </div>
+  );
 };
 
 export default ProfilePage;

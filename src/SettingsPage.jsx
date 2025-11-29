@@ -1,7 +1,7 @@
 import React from 'react';
 import FeatureCard from './FeatureCard';
 import { FaUserEdit, FaLock, FaCreditCard, FaBell } from 'react-icons/fa';
-
+V
 const settingsData = [
     { 
         title: "Edit Profile", 
